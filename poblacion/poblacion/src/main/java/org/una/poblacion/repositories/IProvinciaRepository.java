@@ -5,6 +5,8 @@
  */
 package org.una.poblacion.repositories;
 
+
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.una.poblacion.entities.Provincia;
 
@@ -13,5 +15,7 @@ import org.una.poblacion.entities.Provincia;
  * @author erikg
  */
 public interface IProvinciaRepository extends JpaRepository<Provincia, Long> {
+    
+    public Optional<Provincia> findByCodigo(int codigo);
     
 }

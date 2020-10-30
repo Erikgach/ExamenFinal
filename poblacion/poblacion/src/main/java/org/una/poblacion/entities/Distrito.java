@@ -34,11 +34,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Distrito implements Serializable {
-    @ManyToOne
+   @ManyToOne
     @JoinColumn(name = "canton_id")
-    private Canton canton; 
-    
-     @OneToMany(cascade = CascadeType.ALL, mappedBy = "distrito") 
+    private Canton Canton;
+   
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "distrito") 
     private List<Unidad> unidad= new ArrayList<>();
      
     @Id

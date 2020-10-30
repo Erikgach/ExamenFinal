@@ -5,10 +5,12 @@
  */
 package org.una.poblacion.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,13 +25,13 @@ import lombok.ToString;
  *
  * @author erikg
  */
-
+@Entity
 @Table(name = "exa_eri_TipoUnidades")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TipoUnidad {
+public class TipoUnidad implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoUnidad") 
     private List<Unidad> unidades= new ArrayList<>();

@@ -7,6 +7,7 @@ package org.una.poblacion.services;
 
 import java.util.List;
 import java.util.Optional;
+import org.una.poblacion.dto.TipoUnidadDTO;
 import org.una.poblacion.entities.TipoUnidad;
 
 /**
@@ -14,8 +15,10 @@ import org.una.poblacion.entities.TipoUnidad;
  * @author erikg
  */
 public interface ITipoUnidadService {
-     public Optional<List<TipoUnidad>> findAll();
-    public Optional<TipoUnidad> findById(Long id);
-    public TipoUnidad create(TipoUnidad tipoUnidad);
-    public Optional<TipoUnidad> update(TipoUnidad tipoUnidad, Long id);
+    public Optional<List<TipoUnidadDTO>> findAll();
+    public Optional<TipoUnidadDTO> findById(Long id);
+    public TipoUnidadDTO create(TipoUnidadDTO tipoUnidad);
+    public Optional<TipoUnidadDTO> update(TipoUnidadDTO tipounidadDTO, Long id);
+    public Optional<List<TipoUnidadDTO>> findByNombre(String nombre);
+    public void delete(Long id);
 }

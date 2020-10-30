@@ -6,12 +6,12 @@
 package org.una.poblacion.controllers;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.una.poblacion.dto.ProvinciaDTO;
-import org.una.poblacion.entities.Provincia;
 import org.una.poblacion.services.IProvinciaService;
-import org.una.poblacion.utils.MapperUtils;
 
 /**
  *
@@ -33,61 +31,66 @@ import org.una.poblacion.utils.MapperUtils;
 
 @RestController
 @RequestMapping("/provincias") 
-@Api(tags = {"Provincias"})
 public class ProvinciaController {
     @Autowired
     private IProvinciaService provinciaService;
     
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene una provincia a partir del id ingresado", response = ProvinciaDTO.class, responseContainer = "List", tags = "Provincias")
+      @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-
-            Optional<Provincia> provinciaFound = provinciaService.findById(id);
-            if (provinciaFound.isPresent()) {
-                ProvinciaDTO provinciaDto = MapperUtils.DtoFromEntity(provinciaFound.get(), ProvinciaDTO.class);
-                return new ResponseEntity<>(provinciaDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(provinciaService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    @ApiOperation(value = "Crea una nueva provincia con la información suministrada", response = ProvinciaDTO.class, tags = "Provincias") 
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/") 
+     @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody Provincia provincia) {
+    public ResponseEntity<?> create(@RequestBody ProvinciaDTO cliente) {
         try {
-            Provincia provinciaCreated = provinciaService.create(provincia);
-            ProvinciaDTO provinciaDto = MapperUtils.DtoFromEntity(provinciaCreated, ProvinciaDTO.class);
-            return new ResponseEntity<>(provinciaDto, HttpStatus.CREATED);
+            return new ResponseEntity(provinciaService.create(cliente), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    
-                 
-    @ApiOperation(value = "Actualiza una provincia", response = ProvinciaDTO.class,  tags = "Provincias") 
-    @PutMapping("/{id}") 
+  @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Provincia provinciaModified) {
-        try {
-            Optional<Provincia> provinciaUpdated = provinciaService.update(provinciaModified, id);
-            if (provinciaUpdated.isPresent()) {
-                ProvinciaDTO provinciaDto = MapperUtils.DtoFromEntity(provinciaUpdated.get(), ProvinciaDTO.class);
-                return new ResponseEntity<>(provinciaDto, HttpStatus.OK);
-
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ProvinciaDTO provinciaDTO) {
+        
+            try {
+                Optional<ProvinciaDTO> clienteUpdated = provinciaService.update(provinciaDTO, id);
+                if (clienteUpdated.isPresent()) {
+                    return new ResponseEntity(clienteUpdated, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
+                return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+    
+     @GetMapping("/list/codigo/{term}") 
+    public ResponseEntity<?> findByCodigo(@PathVariable(value = "term") int term) {
+        try {
+            return new ResponseEntity(provinciaService.findByCodigo(term), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        try {
+            provinciaService.delete(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+        
         
 }

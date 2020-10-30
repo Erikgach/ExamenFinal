@@ -7,15 +7,19 @@ package org.una.poblacion.services;
 
 import java.util.List;
 import java.util.Optional;
-import org.una.poblacion.entities.Unidad;
+import org.una.poblacion.dto.UnidadDTO;
+
 
 /**
  *
  * @author erikg
  */
 public interface IUnidadService {
-    public Optional<List<Unidad>> findAll();
-    public Optional<Unidad> findById(Long id);
-    public Unidad create(Unidad tipoUnidad);
-    public Optional<Unidad> update(Unidad unidad, Long id);
+    public Optional<List<UnidadDTO>> findAll();
+    public Optional<UnidadDTO> findById(Long id);
+    public UnidadDTO create(UnidadDTO unidad);
+    public Optional<UnidadDTO> update(UnidadDTO unidadDTO, Long id);
+    public Optional<UnidadDTO> findByCodigo(int codigo);
+    public Optional<List<UnidadDTO>> findByDistrito(Long provincia);
+    public void delete(Long id);
 }

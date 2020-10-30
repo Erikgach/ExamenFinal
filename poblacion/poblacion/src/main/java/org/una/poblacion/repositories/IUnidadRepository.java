@@ -5,7 +5,11 @@
  */
 package org.una.poblacion.repositories;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.una.poblacion.entities.Unidad;
 
 /**
@@ -14,4 +18,8 @@ import org.una.poblacion.entities.Unidad;
  */
 public interface IUnidadRepository extends JpaRepository<Unidad, Long>{
     
+  public Optional<Unidad> findByCodigo(int codigo);
+    
+    @Query("SELECT a FROM Unidad a LEFT JOIN a.distrito e WHERE e.id = :distritoID")
+    public List<Unidad> findByDistrito(@Param("distritoID") Long distrito);
 }

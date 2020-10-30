@@ -5,6 +5,8 @@
  */
 package org.una.poblacion.repositories;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.una.poblacion.entities.TipoUnidad;
 
@@ -14,4 +16,8 @@ import org.una.poblacion.entities.TipoUnidad;
  */
 public interface ITipoUnidadRepository extends JpaRepository<TipoUnidad, Long> {
     
+    public List<TipoUnidad> findByNombreContainingIgnoreCase(String nombre);
+    public Optional<TipoUnidad> findByCodigo(int codigo);
+    
+   
 }

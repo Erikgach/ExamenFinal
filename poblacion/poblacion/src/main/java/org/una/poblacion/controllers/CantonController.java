@@ -6,12 +6,11 @@
 package org.una.poblacion.controllers;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.una.poblacion.dto.CantonDTO;
-import org.una.poblacion.entities.Canton;
 import org.una.poblacion.services.ICantonService;
-import org.una.poblacion.utils.MapperUtils;
+
 
 /**
  *
@@ -32,61 +30,72 @@ import org.una.poblacion.utils.MapperUtils;
  */
 
 @RestController
-@RequestMapping("/cantones") 
-@Api(tags = {"Cantones"})
+@RequestMapping("/cantones")
 public class CantonController {
     @Autowired
     private ICantonService cantonService;
     
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un canton a partir del id ingresado", response = CantonDTO.class, responseContainer = "List", tags = "Cantones")
+     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-
-            Optional<Canton> cantonFound = cantonService.findById(id);
-            if (cantonFound.isPresent()) {
-                CantonDTO cantonDto = MapperUtils.DtoFromEntity(cantonFound.get(), CantonDTO.class);
-                return new ResponseEntity<>(cantonDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(cantonService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    @ApiOperation(value = "Crea un nuevo cantón con la información suministrada", response = CantonDTO.class, tags = "Cantones") 
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/") 
+     @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody Canton canton) {
+    public ResponseEntity<?> create(@RequestBody CantonDTO cliente) {
         try {
-            Canton cantonCreated = cantonService.create(canton);
-            CantonDTO cantonDto = MapperUtils.DtoFromEntity(cantonCreated, CantonDTO.class);
-            return new ResponseEntity<>(cantonDto, HttpStatus.CREATED);
+            return new ResponseEntity(cantonService.create(cliente), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    
-                 
-    @ApiOperation(value = "Actualiza un cantón", response = CantonDTO.class,  tags = "Cantones") 
-    @PutMapping("/{id}") 
+  @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Canton cantonModified) {
-        try {
-            Optional<Canton> cantonUpdated = cantonService.update(cantonModified, id);
-            if (cantonUpdated.isPresent()) {
-                CantonDTO cantonDto = MapperUtils.DtoFromEntity(cantonUpdated.get(), CantonDTO.class);
-                return new ResponseEntity<>(cantonDto, HttpStatus.OK);
-
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody CantonDTO cantonDTO) {
+        
+            try {
+                Optional<CantonDTO> clienteUpdated = cantonService.update(cantonDTO, id);
+                if (clienteUpdated.isPresent()) {
+                    return new ResponseEntity(clienteUpdated, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
+                return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+    
+     @GetMapping("/list/codigo/{term}") 
+    public ResponseEntity<?> findByCodigo(@PathVariable(value = "term") int term) {
+        try {
+            return new ResponseEntity(cantonService.findByCodigo(term), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+       @GetMapping("/list/provincia/{term}") 
+    public ResponseEntity<?> findByProvincia(@PathVariable(value = "term") Long term) {
+        try {
+            return new ResponseEntity(cantonService.findByProvincia(term), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        try {
+            cantonService.delete(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
         

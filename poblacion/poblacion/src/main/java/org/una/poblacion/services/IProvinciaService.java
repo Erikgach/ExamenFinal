@@ -7,6 +7,7 @@ package org.una.poblacion.services;
 
 import java.util.List;
 import java.util.Optional;
+import org.una.poblacion.dto.ProvinciaDTO;
 import org.una.poblacion.entities.Provincia;
 
 /**
@@ -14,8 +15,10 @@ import org.una.poblacion.entities.Provincia;
  * @author erikg
  */
 public interface IProvinciaService {
-    public Optional<List<Provincia>> findAll();
-    public Optional<Provincia> findById(Long id);
-    public Provincia create(Provincia provincia);
-    public Optional<Provincia> update(Provincia provincia, Long id);
+    public Optional<List<ProvinciaDTO>> findAll();
+    public Optional<ProvinciaDTO> findById(Long id);
+    public ProvinciaDTO create(ProvinciaDTO provincia);
+    public Optional<ProvinciaDTO> update(ProvinciaDTO provinciaDTO, Long id);
+    public Optional<ProvinciaDTO> findByCodigo(int codigo);
+    public void delete(Long id);
 }

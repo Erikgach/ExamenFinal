@@ -6,7 +6,11 @@
 package org.una.poblacion.repositories;
 
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.una.poblacion.entities.Canton;
 
 /**
@@ -14,5 +18,8 @@ import org.una.poblacion.entities.Canton;
  * @author erikg
  */
 public interface ICantonRepository extends JpaRepository<Canton, Long>{
-   
+
+    public Optional<Canton> findByCodigo(int codigo);
+    @Query("SELECT a FROM Canton a LEFT JOIN a.provincia e WHERE e.id = :provinciaID")
+    public List<Canton> findByProvincia(@Param("provinciaID") Long provincia);
 }

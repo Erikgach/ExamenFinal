@@ -11,8 +11,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.una.poblacion.dto.DistritoDTO;
 import org.una.poblacion.entities.Distrito;
 import org.una.poblacion.repositories.IDistritoRepository;
+import org.una.poblacion.utils.MapperUtils;
+import org.una.poblacion.utils.ServiceConvertionHelper;
 
 
 /**
@@ -25,33 +28,52 @@ public class DistritoServiceImplementation implements IDistritoService{
     @Autowired
     private IDistritoRepository distritoRepository;
     
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Distrito> findById(Long id) {
-        return distritoRepository.findById(id);
+   @Override
+    @Transactional
+    public DistritoDTO create(DistritoDTO distrito) {
+       Distrito nombre = MapperUtils.EntityFromDto(distrito, Distrito.class);
+        nombre = distritoRepository.save(nombre);
+        return MapperUtils.DtoFromEntity(nombre, DistritoDTO.class);
     }
 
-    @Override
+     @Override
     @Transactional
-    public Distrito create(Distrito distrito) {
-        return distritoRepository.save(distrito);
-    }
-
-    @Override
-    @Transactional
-    public Optional<Distrito> update(Distrito distrito, Long id) {
-    if (distritoRepository.findById(id).isPresent()) {
-            return Optional.ofNullable(distritoRepository.save(distrito));
+    public Optional<DistritoDTO> update(DistritoDTO distritoDTO, Long id) {
+        if (distritoRepository.findById(id).isPresent()) {
+            Distrito distrito = MapperUtils.EntityFromDto(distritoDTO, Distrito.class);
+            distrito = distritoRepository.save(distrito);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(distrito, DistritoDTO.class));
         } else {
             return null;
-        }
+        } 
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<DistritoDTO>> findAll() {
+    return ServiceConvertionHelper.findList(distritoRepository.findAll(), DistritoDTO.class);
     }
     
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Distrito>> findAll() {
-        return Optional.ofNullable(distritoRepository.findAll());
+    public Optional<DistritoDTO> findById(Long id) {
+         return ServiceConvertionHelper.oneToOptionalDto(distritoRepository.findById(id), DistritoDTO.class);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DistritoDTO> findByCodigo(int codigo) {
+        return ServiceConvertionHelper.oneToOptionalDto(distritoRepository.findByCodigo(codigo), DistritoDTO.class);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<DistritoDTO>> findByCanton(Long canton) {
+        return ServiceConvertionHelper.findList(distritoRepository.findByCanton(canton), DistritoDTO.class);
+    }
+
+    @Override
+    public void delete(Long id) {
+         distritoRepository.deleteById(id);  }
+    
 
    
 }

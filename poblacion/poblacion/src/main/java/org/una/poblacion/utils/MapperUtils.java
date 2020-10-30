@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+
 /**
  *
  * @author erikg
  */
 public class MapperUtils {
 
-    private static ModelMapper modelMapper = new ModelMapper();
+     private static ModelMapper modelMapper = new ModelMapper();
 
     static {
         modelMapper = new ModelMapper();
@@ -34,6 +35,10 @@ public class MapperUtils {
         return entityList.stream()
                 .map(entity -> DtoFromEntity(entity, dtoClass))
                 .collect(Collectors.toList());
+    }
+    
+    public static <E, D> E EntityFromDto(final D dto, Class<E> entityClass) {
+        return modelMapper.map(dto, entityClass);
     }
 
 } 
