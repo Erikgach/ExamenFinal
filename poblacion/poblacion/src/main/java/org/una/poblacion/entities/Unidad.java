@@ -41,9 +41,7 @@ public class Unidad {
     
     @Column(length = 15)
     private String codigo;
-    
-    @Column(length = 15)
-    private String tipo;
+  
     
     @Column(length = 50)
     private String extension;
