@@ -6,11 +6,11 @@
 package org.una.poblacion.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,30 +28,32 @@ import lombok.ToString;
  * @author erikg
  */
 @Entity
-@Table(name = "exa_eri_Distritos")
+@Table(name = "exa_egc_distritos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Distrito implements Serializable {
-   @ManyToOne
-    @JoinColumn(name = "canton_id")
-    private Canton Canton;
-   
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "distrito") 
-    private List<Unidad> unidad= new ArrayList<>();
-     
+public class Distrito implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "nombre", length = 45)
+    @Column(length = 50)
     private String nombre;
     
-    @Column(name = "extension", length = 15)
+    @Column(length = 15)
+    private String codigo;
+    
+     @Column(length = 50)
     private String extension;
     
-    @Column(name = "codigo", length = 10)
-    private String codigo;
-
+    @ManyToOne 
+    @JoinColumn(name="canton")
+    private Canton canton;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "distrito")
+    private List<Unidad> unidades;
 }
